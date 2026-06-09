@@ -1,0 +1,16 @@
+model Reservation {
+  id String @id @default(uuid())
+
+  userId String
+  slotId String
+
+  user     User     @relation(fields: [userId], references: [id])
+  timeSlot TimeSlot @relation(fields: [slotId], references: [id])
+
+  status ReservationStatus @default(ACTIVE)
+
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

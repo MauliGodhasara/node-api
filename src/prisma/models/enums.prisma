@@ -9,3 +9,10 @@ enum BookingStatus {
   CONFIRMED
   CANCELLED
 }
+
+enum ReservationStatus {
+  ACTIVE
+  EXPIRED
+  COMPLETED
+  CANCELLED
+}

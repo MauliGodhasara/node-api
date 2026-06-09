@@ -19,11 +19,22 @@ async function main() {
     current <= endDate;
     current.setDate(current.getDate() + 1)
   ) {
+    // Keep only date part (00:00:00)
+    const slotDate = new Date(
+      current.getFullYear(),
+      current.getMonth(),
+      current.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+
     for (const pitch of pitches) {
       for (let hour = 6; hour < 23; hour++) {
         slots.push({
           pitchId: pitch.id,
-          date: new Date(current),
+          date: slotDate,
           startTime: `${String(hour).padStart(2, "0")}:00`,
           endTime: `${String(hour + 1).padStart(2, "0")}:00`,
           isBooked: false,
@@ -31,6 +42,9 @@ async function main() {
       }
     }
   }
+
+  // Optional: clear old slots before reseeding
+  await prisma.timeSlot.deleteMany();
 
   await prisma.timeSlot.createMany({
     data: slots,
@@ -40,7 +54,9 @@ async function main() {
 }
 
 main()
-  .catch(console.error)
+  .catch((error) => {
+    console.error(error);
+  })
   .finally(async () => {
     await prisma.$disconnect();
   });
