@@ -6,7 +6,11 @@ export class UserRepository {
       where: { email },
     });
   }
-
+  async findByPhoneNumber(phoneNumber: string) {
+    return prisma.user.findUnique({
+      where: { phoneNumber },
+    });
+  }
   async create(data: {
     name: string;
     email: string;

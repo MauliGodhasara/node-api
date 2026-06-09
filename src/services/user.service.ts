@@ -17,7 +17,13 @@ export class UserService {
     if (existingUser) {
       throw new AppError("User already exists", 400);
     }
+    const existingPhone = await this.userRepository.findByPhoneNumber(
+      data.phoneNumber!,
+    );
 
+    if (existingPhone) {
+      throw new AppError("Phone number already registered", 400);
+    }
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const user = await this.userRepository.create({
