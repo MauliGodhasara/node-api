@@ -1,0 +1,17 @@
+model TimeSlot {
+  id        String @id @default(uuid())
+
+  pitchId   String
+  pitch     Pitch  @relation(fields: [pitchId], references: [id])
+
+  date      DateTime
+  startTime String
+  endTime   String
+
+  status    SlotStatus @default(AVAILABLE)
+
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
