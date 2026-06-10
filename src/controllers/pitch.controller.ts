@@ -14,7 +14,8 @@ export class PitchController {
     const name = (req.query.name as string) || undefined;
     const type = (req.query.type as string) || undefined;
     const sortBy = (req.query.sortBy as string) || "createdAt";
-    const sortOrder = (req.query.sortOrder as string) === "asc" ? "asc" : "desc";
+    const sortOrder =
+      (req.query.sortOrder as string) === "asc" ? "asc" : "desc";
 
     const pitches = await this.pitchService.getAllPitches(
       page,
@@ -42,8 +43,6 @@ export class PitchController {
 
     return res
       .status(200)
-      .json(
-        new ApiResponse(true, 200, "Pitch fetched successfully", pitch),
-      );
+      .json(new ApiResponse(true, 200, "Pitch fetched successfully", pitch));
   });
 }
