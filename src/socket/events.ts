@@ -9,4 +9,7 @@ export const SOCKET_EVENTS = {
 
   SLOT_ERROR: "slot:error",
   SLOT_EXPIRED: "slot:expired",
+
+  BOOKING_CANCELLED: "book:cancelled",
+  BOOKING_CREATED: "book:create",
 };
