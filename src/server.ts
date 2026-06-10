@@ -6,6 +6,7 @@ dotenv.config();
 import app from "./app";
 import { initSocket } from "./socket";
 import { connectRedis } from "./config/redis";
+import { startReservationExpiryJob } from "./jobs/reservation-expiry.job";
 
 const server = http.createServer(app);
 
@@ -15,7 +16,7 @@ async function bootstrap() {
   await connectRedis();
 
   await initSocket(server);
-
+  startReservationExpiryJob();
   server.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
   });
