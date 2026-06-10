@@ -59,4 +59,26 @@ export class ReservationRepository {
       },
     });
   }
+
+  async findUserActiveReservation(userId: string, slotId: string) {
+    return prisma.reservation.findFirst({
+      where: {
+        userId,
+        slotId,
+        status: "ACTIVE",
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+    });
+  }
+
+  async completeReservation(id: string) {
+    return prisma.reservation.update({
+      where: { id },
+      data: {
+        status: "COMPLETED",
+      },
+    });
+  }
 }

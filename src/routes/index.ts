@@ -3,6 +3,7 @@ import { Router } from "express";
 import authRoutes from "./public/auth.route";
 import pitchRoutes from "./protected/pitch.route";
 import userRoutes from "./protected/user.route";
+import bookingRoutes from "./protected/booking.routes";
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.use("/auth", authRoutes);
  */
 router.use("/pitches", pitchRoutes);
 router.use("/users", userRoutes);
-// router.use("/bookings", bookingRoutes);
+router.use("/bookings", bookingRoutes);
 
 /**
  * Admin Routes

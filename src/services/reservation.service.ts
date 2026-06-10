@@ -1,12 +1,13 @@
 import { prisma } from "../config";
 import { ReservationStatus } from "@prisma/client";
 import { ReservationRepository } from "../repositories";
-import { AppError } from "../utils";
+import { AppError, logger } from "../utils";
 
 export class ReservationService {
   private reservationRepository = new ReservationRepository();
 
   async reserveSlot(userId: string, slotId: string) {
+    logger.info("userId", userId);
     // First expire old reservations
     await this.reservationRepository.expireOldReservations();
 
