@@ -1,12 +1,50 @@
 import { PrismaClient } from "@prisma/client";
+import { pitches as pitchData } from "../data/pitches-list";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  console.log("Seeding pitches...");
+
+  // Upsert each pitch from the pitches-list data
+  for (const pitch of pitchData) {
+    await prisma.pitch.upsert({
+      where: { id: pitch.id },
+      update: {
+        name: pitch.title,
+        type: pitch.type,
+        typeStyle: pitch.typeStyle,
+        image: pitch.image,
+        location: pitch.location,
+        sportType: pitch.type,
+        pricePerHour: parseFloat(pitch.price),
+        hours: pitch.hours,
+        tags: pitch.tags,
+        description: pitch.description,
+      },
+      create: {
+        id: pitch.id,
+        name: pitch.title,
+        type: pitch.type,
+        typeStyle: pitch.typeStyle,
+        image: pitch.image,
+        location: pitch.location,
+        sportType: pitch.type,
+        pricePerHour: parseFloat(pitch.price),
+        hours: pitch.hours,
+        tags: pitch.tags,
+        description: pitch.description,
+      },
+    });
+  }
+
+  console.log(`Seeded ${pitchData.length} pitches`);
+
+  // Now fetch all seeded pitches and generate time slots
   const pitches = await prisma.pitch.findMany();
 
   if (!pitches.length) {
-    throw new Error("No pitches found");
+    throw new Error("No pitches found after seeding");
   }
 
   const startDate = new Date();
@@ -43,7 +81,7 @@ async function main() {
     }
   }
 
-  // Optional: clear old slots before reseeding
+  // Clear old slots before reseeding
   await prisma.timeSlot.deleteMany();
 
   await prisma.timeSlot.createMany({

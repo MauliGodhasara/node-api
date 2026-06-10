@@ -1,9 +1,10 @@
 model Booking {
-  id String @id @default(uuid())
-
+  id         String   @id @default(uuid())
   userId     String
   timeSlotId String
+  timeSlot   TimeSlot @relation(fields: [timeSlotId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
-  user     User     @relation(fields: [userId], references: [id])
-  timeSlot TimeSlot @relation(fields: [timeSlotId], references: [id])
+  @@index([timeSlotId], map: "Booking_timeSlotId_fkey")
+  @@index([userId], map: "Booking_userId_fkey")
 }

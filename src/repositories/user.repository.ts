@@ -21,4 +21,10 @@ export class UserRepository {
       data,
     });
   }
+
+  async findById(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+    });
+  }
 }

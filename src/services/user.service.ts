@@ -64,4 +64,16 @@ export class UserService {
       user: userData,
     };
   }
+
+  async getUserById(userId: string) {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    const { password, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
+  }
 }

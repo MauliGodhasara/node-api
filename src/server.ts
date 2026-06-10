@@ -6,20 +6,28 @@ dotenv.config();
 import app from "./app";
 import { initSocket } from "./socket";
 import { connectRedis } from "./config/redis";
-import { startReservationExpiryJob } from "./jobs/reservation-expiry.job";
 
 const server = http.createServer(app);
 
 const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
-  await connectRedis();
+  try {
+    // console.log("Connecting Redis...");
+    // await connectRedis();
+    // console.log("Redis connected");
 
-  await initSocket(server);
-  startReservationExpiryJob();
-  server.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
-  });
+    console.log("Initializing Socket...");
+    await initSocket(server);
+    console.log("Socket initialized");
+
+    server.listen(PORT, () => {
+      console.log(`Server running on ${PORT}`);
+    });
+  } catch (error) {
+    console.error("BOOTSTRAP ERROR:");
+    console.error(error);
+  }
 }
 
 bootstrap();
