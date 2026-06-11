@@ -36,4 +36,16 @@ export class ReservationService {
       });
     });
   }
+
+  async cancelReservation(userId: string, slotId: string) {
+    const reservation =
+      await this.reservationRepository.findUserActiveReservation(
+        userId,
+        slotId,
+      );
+    if (!reservation) {
+      throw new AppError("Reservation not found", 404);
+    }
+    return this.reservationRepository.cancelReservation(reservation.id);
+  }
 }

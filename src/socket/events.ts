@@ -4,6 +4,7 @@ export const SOCKET_EVENTS = {
 
   SLOT_RESERVE: "slot:reserve",
   SLOT_RESERVED: "slot:reserved",
+  SLOT_UNRESERVE: "slot:unreserve",
 
   SLOT_UPDATED: "slot:updated",
 

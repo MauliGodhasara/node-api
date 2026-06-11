@@ -11,7 +11,6 @@ export class TimeSlotRepository {
     return prisma.timeSlot.findMany({
       where: {
         pitchId,
-        isBooked: false,
         date: {
           gte: startOfDay,
           lte: endOfDay,
@@ -41,18 +40,18 @@ export class TimeSlotRepository {
       },
     });
   }
-  
+
   async findActiveReservations(slotIds: string[]) {
-  return prisma.reservation.findMany({
-    where: {
-      slotId: {
-        in: slotIds,
+    return prisma.reservation.findMany({
+      where: {
+        slotId: {
+          in: slotIds,
+        },
+        status: "ACTIVE",
+        expiresAt: {
+          gt: new Date(),
+        },
       },
-      status: "ACTIVE",
-      expiresAt: {
-        gt: new Date(),
-      },
-    },
-  });
-}
+    });
+  }
 }

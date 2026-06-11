@@ -81,4 +81,13 @@ export class ReservationRepository {
       },
     });
   }
+
+  async cancelReservation(id: string) {
+    return prisma.reservation.update({
+      where: { id },
+      data: {
+        status: "EXPIRED",
+      },
+    });
+  }
 }

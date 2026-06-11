@@ -1,7 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { ReservationService, TimeSlotService } from "../services";
 import { SOCKET_EVENTS } from "./events";
-import { info } from "console";
 
 export const slotSocket = (io: Server, socket: Socket) => {
   const timeSlotService = new TimeSlotService();
@@ -71,10 +70,34 @@ export const slotSocket = (io: Server, socket: Socket) => {
           data: reservation,
         });
 
-        // notify all users
-        io.emit(SOCKET_EVENTS.SLOT_UPDATED, {
+        socket.broadcast.emit(SOCKET_EVENTS.SLOT_UPDATED, {
           slotId,
           status: "RESERVED",
+        });
+      } catch (error: any) {
+        socket.emit(SOCKET_EVENTS.SLOT_ERROR, {
+          success: false,
+          message: error.message,
+        });
+      }
+    },
+  );
+
+  socket.on(
+    SOCKET_EVENTS.SLOT_UNRESERVE,
+    async ({ slotId }: { slotId: string }) => {
+      try {
+        const user = (socket as any).user;
+        if (!user) {
+          return socket.emit(SOCKET_EVENTS.SLOT_ERROR, {
+            message: "Unauthorized",
+          });
+        }
+        await reservationService.cancelReservation(user.userId, slotId);
+        // notify other users that it's available again
+        socket.broadcast.emit(SOCKET_EVENTS.SLOT_UPDATED, {
+          slotId,
+          status: "AVAILABLE",
         });
       } catch (error: any) {
         socket.emit(SOCKET_EVENTS.SLOT_ERROR, {
